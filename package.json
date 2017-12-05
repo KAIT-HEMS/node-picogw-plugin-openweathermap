@@ -1,0 +1,24 @@
+{
+  "name": "picogw-plugin-openweathermap",
+  "version": "0.0.1",
+  "description": "OpenWeatherMap plugin of picogw",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KAIT-HEMS/node-picogw-plugin-openweathermap.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KAIT-HEMS/node-picogw-plugin-openweathermap/issues"
+  },
+  "homepage": "https://github.com/KAIT-HEMS/node-picogw-plugin-openweathermap#readme",
+  "picogw": {
+    "role": [
+      "server"
+    ]
+  }
+}
