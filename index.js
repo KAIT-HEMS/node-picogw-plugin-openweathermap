@@ -8,7 +8,12 @@ let pluginInterface ;
 let log = console.log ;
 
 
-exports.init = function(pi){
+module.exports = {
+    init: init,
+    onCall: onProcCall,
+};
+
+function init(pi){
 	pluginInterface = pi ;
 	log = pi.log ;
 
@@ -18,8 +23,6 @@ exports.init = function(pi){
 	 		newSettings[k] = newSettings[k].trim() ;
 	 }
 	} ) ;
-
-	return onProcCall ;
 } ;
 
 function onProcCall( method , path , args ){
