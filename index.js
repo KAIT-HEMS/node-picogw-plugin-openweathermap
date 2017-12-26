@@ -1,4 +1,3 @@
-const fs = require('fs');
 const http = require('http');
 
 const REQ_TIMEOUT = 30*1000;
@@ -11,6 +10,7 @@ let log = console.log; // eslint-disable-line no-unused-vars
 module.exports = {
     init: init,
     onCall: onProcCall,
+    onUISetSettings: onUISetSettings,
 };
 
 /**
@@ -20,14 +20,20 @@ module.exports = {
 function init(pluginInterface) {
     pi = pluginInterface;
     log = pi.log;
+}
 
-    pi.on('SettingsUpdated', (newSettings) =>{
-        for (let k in newSettings) {
-            if (typeof newSettings[k] == 'string') {
-                newSettings[k] = newSettings[k].trim();
-            }
+/**
+ * Setting value rewriting event for UI
+ * @param {object} newSettings Settings edited for UI
+ * @return {object} Settings to save
+ */
+function onUISetSettings(newSettings) {
+    for (const k of Object.keys(newSettings)) {
+        if (typeof newSettings[k] === 'string') {
+            newSettings[k] = newSettings[k].trim();
         }
-    });
+    }
+    return newSettings;
 }
 
 /**
@@ -49,22 +55,18 @@ function onProcCall(method, path, args) {
 
     switch (method) {
     case 'GET':
-        if (path == '') {
+        if (path === '') {
             return re;
         }
 
         return new Promise((ac, rj)=>{
             let API_URL;
             try {
-                let settings;
-                try {
-                    settings = JSON.parse(fs.readFileSync(
-                        pi.getpath() + 'settings.json').toString());
-                    if (typeof settings.APPID != 'string') throw new Error({});
-                } catch (e) {
+                let settings = pi.setting.getSettings();
+                if (!settings || typeof settings.APPID != 'string') {
                     rj({error: 'No openweathermap API key is specified.\nYou can obtain your own api key by creating OpenWeatherMap account on https://home.openweathermap.org/users/sign_up'}); // eslint-disable-line max-len
                     return;
-                } ;
+                }
                 settings = Object.assign(settings, args);
 
                 let settingsFlat = '';
